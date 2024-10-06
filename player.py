@@ -2,6 +2,7 @@
 import pygame
 import random
 import config
+import Ai
 
 class Pajaro:
     def __init__(self):
@@ -14,6 +15,11 @@ class Pajaro:
         self.muerto = False
         # Ai
         self.decision = None
+        self.inputs = 3
+        self.vision = [0.5, 1, 0.5]
+        self.ai = Ai.Ai(self.inputs)
+        self.ai.generar_red()
+
 
     def draw(self,win):
         #print ("dibuja")
@@ -38,6 +44,12 @@ class Pajaro:
             self.velocidad_gravedad = 0
             self.muerto = True
 
+    @staticmethod
+    def distancia_mas_cercana():
+        for tuberia in config.tuberias:
+            if not tuberia.passed:
+                return tuberia
+
     def saltar(self):
         if not self.salto and not self.pajaro.y < 30: # si no está saltando y no ha subido demasiado
             self.salto = True
@@ -46,7 +58,24 @@ class Pajaro:
             self.salto = False
 
     #Ai
+
+    def  get_vision(self):
+        if config.tuberias: # calcular solo si hay tuberias en pantalla
+            # y_tub_arriba
+            self.vision[0] = max(0,self.pajaro.center[1] - self.distancia_mas_cercana().ractangulo_arriba.bottom) / 500
+            pygame.draw.line(config.win, self.color, self.pajaro.center, (self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_arriba.bottom))
+
+            # y_tub_abajo
+            self.vision[2] = max(0,self.distancia_mas_cercana().ractangulo_abajo.top - self.pajaro.center[1]) / 500
+            pygame.draw.line(config.win, self.color, self.pajaro.center,(self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_abajo.top))
+
+            # x_tub
+            self.vision[1] = max(0,self.distancia_mas_cercana().x - self.pajaro.center[0]) / 500
+            pygame.draw.line(config.win, self.color, self.pajaro.center, (self.distancia_mas_cercana().x, self.pajaro.center[1]), 1)
+
+
+
     def decidir(self):
-        self.decision = random.uniform(0,1)
-        if self.decision > 0.6: # TODO cambiar a 0.73
+        self.decision = self.ai.forward(self.vision)
+        if self.decision > config.__UMBRAL_DE_SALTO__:
             self.saltar()

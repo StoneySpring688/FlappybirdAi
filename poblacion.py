@@ -13,6 +13,7 @@ class Poblacion:
         for pajaro in self.pajaros:
             if not pajaro.muerto:
                 #print(self.pajaro.muerto)
+                pajaro.get_vision()
                 pajaro.decidir()
                 pajaro.draw(config.win)
                 pajaro.gravedad(config.suelo)
