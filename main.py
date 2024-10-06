@@ -45,5 +45,5 @@ def main():
 if __name__ == '__main__':
     pygame.init()
     clock = pygame.time.Clock()
-    poblacion = poblacion.Poblacion(10)
+    poblacion = poblacion.Poblacion(200)
     main()

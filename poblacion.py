@@ -32,7 +32,7 @@ class Poblacion:
 
         self.eliminar_extintos()
 
-        print("LOS QUE NO SE ADAPTARoN MURIERON")
+        print("LOS QUE NO SE ADAPTARON MURIERON")
         self.purgar()
 
         print("ELEGIR AL MEJOR UNGA UNGA")

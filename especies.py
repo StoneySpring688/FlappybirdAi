@@ -54,8 +54,11 @@ class Especie:
 
         try:
             nene = self.pajaros[idx].clone()
+            nene.ai.mutar()
+            return nene
         except IndexError:
             nene = self.pajaros[0].clone()
+            nene.ai.mutar()
+            return nene
 
-        nene.ai.mutar()
-        return nene
+
