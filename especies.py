@@ -57,8 +57,6 @@ class Especie:
             nene.ai.mutar()
             return nene
         except IndexError:
-            nene = self.pajaros[0].clone()
-            nene.ai.mutar()
-            return nene
+            exit(1)
 
 
