@@ -5,12 +5,12 @@ def sigmoide(x):
     return 1 / (1 + math.exp(-x))
 
 class Nodo:
-    def __init__(self, nombre):
+    def __init__(self, nombre,capa=0):
         self.nombre = nombre
         self.output = 0
         self.input = 0
         self.conexiones = []
-        self.capa = 0
+        self.capa = capa
 
     def calcular_output(self):
         for i in range(0,len(self.conexiones)):
@@ -23,3 +23,6 @@ class Nodo:
 
     def reiniciar(self):
         self.input = 0
+
+    def clone(self):
+        return Nodo(self.nombre, self.capa)

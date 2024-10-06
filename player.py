@@ -19,6 +19,7 @@ class Pajaro:
         self.vision = [0.5, 1, 0.5]
         self.ai = Ai.Ai(self.inputs)
         self.ai.generar_red()
+        self.fitness = 0
 
 
     def draw(self,win):
@@ -31,6 +32,10 @@ class Pajaro:
     def colision_tuberia(self):
         for tuberia in config.tuberias:
             return pygame.Rect.colliderect(self.pajaro, tuberia.ractangulo_abajo) or pygame.Rect.colliderect(self.pajaro, tuberia.ractangulo_arriba)  # True si hay colision con alguna tuberia
+
+    def avanzar(self,suelo):
+        self.gravedad(suelo)
+        self.fitness += 1 # cuanto más aguante vivo, mejor es
 
     def gravedad(self,suelo):
         if not (self.colision_suelo(suelo) or self.colision_tuberia()): # no hay colision con el suelo o no ha subido demasiado
@@ -63,15 +68,15 @@ class Pajaro:
         if config.tuberias: # calcular solo si hay tuberias en pantalla
             # y_tub_arriba
             self.vision[0] = max(0,self.pajaro.center[1] - self.distancia_mas_cercana().ractangulo_arriba.bottom) / 500
-            pygame.draw.line(config.win, self.color, self.pajaro.center, (self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_arriba.bottom))
+            #pygame.draw.line(config.win, self.color, self.pajaro.center, (self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_arriba.bottom))
 
             # y_tub_abajo
             self.vision[2] = max(0,self.distancia_mas_cercana().ractangulo_abajo.top - self.pajaro.center[1]) / 500
-            pygame.draw.line(config.win, self.color, self.pajaro.center,(self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_abajo.top))
+            #pygame.draw.line(config.win, self.color, self.pajaro.center,(self.pajaro.center[0], self.distancia_mas_cercana().ractangulo_abajo.top))
 
             # x_tub
             self.vision[1] = max(0,self.distancia_mas_cercana().x - self.pajaro.center[0]) / 500
-            pygame.draw.line(config.win, self.color, self.pajaro.center, (self.distancia_mas_cercana().x, self.pajaro.center[1]), 1)
+            #pygame.draw.line(config.win, self.color, self.pajaro.center, (self.distancia_mas_cercana().x, self.pajaro.center[1]), 1)
 
 
 
@@ -79,3 +84,10 @@ class Pajaro:
         self.decision = self.ai.forward(self.vision)
         if self.decision > config.__UMBRAL_DE_SALTO__:
             self.saltar()
+
+    def clone(self):
+        clone = Pajaro()
+        clone.fitness = self.fitness
+        clone.ai = self.ai.clone()
+        clone.ai.generar_red()
+        return clone

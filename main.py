@@ -34,10 +34,10 @@ def main():
 
         if not poblacion.sanExtintoLosMuTontos():
             poblacion.update_pajaros_vivos() # dibujar los pajaros vivos
-        elif pygame.time.get_ticks() % 1000 < 500:  # Parpadeo Game Over
-            font = pygame.font.SysFont(None, 55)
-            text = font.render('GAME OVER', True, (255, 0, 0))
-            config.win.blit(text, (config.winW // 2 - text.get_width() // 2, config.winH // 2 - text.get_height() // 2))
+        else:
+            config.tuberias = [] # eliminar las tuberias (reiniciar el entorno)
+            poblacion.selection()
+
 
         clock.tick(60)
         pygame.display.flip()
@@ -45,5 +45,5 @@ def main():
 if __name__ == '__main__':
     pygame.init()
     clock = pygame.time.Clock()
-    poblacion = poblacion.Poblacion(50)
+    poblacion = poblacion.Poblacion(10)
     main()
